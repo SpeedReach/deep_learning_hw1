@@ -66,4 +66,9 @@ Test Accuracy: 0.97
 **decision boundary**:  
 theta0: -0.060600000000000084  
 theta1: 0.10332857142857141  
-![image](https://github.com/SpeedReach/deep_learning_hw1/blob/main/images/logistic_refression.png?raw=true)
+![image](https://github.com/SpeedReach/deep_learning_hw1/blob/main/images/logistic_regression.png?raw=true)
+
+# 4
+## 4.1
+[code](https://github.com/SpeedReach/deep_learning_hw1/blob/main/mnist_show.py)
+![image](https://github.com/SpeedReach/deep_learning_hw1/blob/main/images/random50.png?raw=true)
