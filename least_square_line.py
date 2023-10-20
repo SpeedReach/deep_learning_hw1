@@ -29,4 +29,11 @@ y_fitted = fitted_parabola(x)
 line =  f'y = {theta_0:.2f} + {theta_1:.2f}x'
 plt.plot(x, y_fitted, label=line, color='red')
 plt.legend()
+
+
+#Calculate the mean squared error
+mse = np.mean((y_fitted - y)**2)
+print(f'mse = {mse}')
+
+
 plt.show()

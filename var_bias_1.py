@@ -1,11 +1,16 @@
 import matplotlib.pyplot as plt
 import scipy.io
 import numpy as np
-from scipy.optimize import curve_fit
 
-mat_data = scipy.io.loadmat('data.mat')
-x = mat_data['x'].flatten()
-y = mat_data['y'].flatten()
+
+data = scipy.io.loadmat('data.mat')
+x = data['x'].flatten()
+y = data['y'].flatten()
+
+# plot data
+plt.plot(x, y)
+plt.xlabel('x')
+plt.ylabel('y')
 
 # Number of random samples
 num_samples = 30
@@ -15,8 +20,6 @@ num_iterations = 200
 theta_0_values = []
 theta_1_values = []
 
-def parabola(v, theta_0, theta_1):
-    return theta_0 + theta_1 * v
 
 for _ in range(num_iterations):
     # Randomly select 30 data samples
@@ -25,21 +28,29 @@ for _ in range(num_iterations):
     y_sample = y[random_indices]
     
     # Perform linear regression (first-order polynomial)
-    params, _ = curve_fit(parabola, x_sample, y_sample)
+    X = np.column_stack((np.ones_like(x_sample), x_sample))
+
+    theta = np.linalg.inv(X.T.dot(X)).dot(X.T).dot(y_sample)
+
+    # Extract the coefficients from theta
+    theta_0, theta_1, = theta
     
-    # Extract the parameters
-    theta_0, theta_1 = params
-    
+
     # Store the parameters
     theta_0_values.append(theta_0)
     theta_1_values.append(theta_1)
 
+def fitted_function(x,i):
+    return theta_0_values[i] + theta_1_values[i]*x
+
+mse = []
 # Plot the 200 lines
 for i in range(num_iterations):
-    plt.plot(x, theta_0_values[i] + theta_1_values[i]*x, color='grey', alpha=0.1)
+    predict_y = fitted_function(x,i)
+    plt.plot(x, predict_y, color='grey', alpha=0.1)
+    mse = np.append(mse,np.mean((predict_y - y)**2))
 
-# Plot the original data
-plt.scatter(x, y, color='red', label='Original Data')
+print(np.mean(mse))
 
 plt.xlabel('x')
 plt.ylabel('y')
