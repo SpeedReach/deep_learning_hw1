@@ -1,6 +1,8 @@
 # 資科三 110703065 詹松霖
 All models are implmented by myself.  
-All the codes are in [Github Repo](https://github.com/SpeedReach/deep_learning_hw1/tree/main)
+All the codes are in [Github Repo](https://github.com/SpeedReach/deep_learning_hw1/tree/main)  
+[Nice looking markdown version](https://github.com/SpeedReach/deep_learning_hw1/blob/main/HW1.md)
+
 ## 1. 
 ### 1.1 Plot the data using plot function.
 ```python
