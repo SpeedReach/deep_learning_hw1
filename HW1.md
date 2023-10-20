@@ -72,3 +72,69 @@ theta1: 0.10332857142857141
 ## 4.1
 [code](https://github.com/SpeedReach/deep_learning_hw1/blob/main/mnist_show.py)
 ![image](https://github.com/SpeedReach/deep_learning_hw1/blob/main/images/random50.png?raw=true)
+
+## 4.2
+[full code](https://github.com/SpeedReach/deep_learning_hw1/blob/main/mnist.py)
+```python
+# 28*28 => 1*784
+x_selected = x_selected.reshape(5000, -1)
+# Normalize the data
+mean = np.mean(x_selected, axis=0)
+std_dev = np.std(x_selected, axis=0)
+
+normalized_images = (x_selected - mean) / (std_dev + 1e-10 )
+
+# Step 3: Compute Covariance Matrix
+cov_matrix = np.cov(normalized_images, rowvar=False)
+
+# Step 4: Compute Eigenpairs
+eigenvalues, eigenvectors = np.linalg.eig(cov_matrix)
+
+# Step 5: Sort Eigenpairs
+sorted_indices = np.argsort(eigenvalues)[::-1]
+sorted_eigenvalues = eigenvalues[sorted_indices]
+sorted_eigenvectors = eigenvectors[:, sorted_indices]
+```
+
+## 4.3
+[full code](https://github.com/SpeedReach/deep_learning_hw1/blob/main/mnist.py)
+```python
+def doPCA(dimension: int):
+  # Step 1: Select the top {dimension} eigenvectors
+  top_eigenvectors = sorted_eigenvectors[:, :dimension]
+
+  # Step 2: Project the normalized data onto the top {dimension} eigenvectors
+  reduced_data = np.dot(normalized_images, top_eigenvectors)
+  # Step 1: Project back to the original space
+  decoded_data = np.dot(reduced_data, top_eigenvectors.T)
+
+  # Step 2: Add back the mean
+  decoded_data = (decoded_data * std_dev) + mean
+  decoded_data = decoded_data.reshape(5000, 28, 28).astype('float64')
+
+  lines = 10
+  columns = 10
+
+  fig = plt.figure()
+  fig.suptitle(f'PCA with {dimension} dimensions')
+  for i in range(lines):
+    for j in range(columns):
+      ax = fig.add_subplot(lines,columns, 1+i*10+j)
+      plt.imshow(decoded_data[i*500+j,:,:], cmap='binary')
+      plt.sca(ax)
+      ax.set_xticks([], [])
+      ax.set_yticks([], [])
+
+  
+doPCA(500)
+doPCA(300)
+doPCA(100)
+doPCA(50)
+plt.show()
+```
+![image](https://github.com/SpeedReach/deep_learning_hw1/blob/main/images/PAC_500.jpg?raw=true)
+![image](https://github.com/SpeedReach/deep_learning_hw1/blob/main/images/PAC_300.jpg?raw=true)
+![image](https://github.com/SpeedReach/deep_learning_hw1/blob/main/images/PAC_100.jpg?raw=true)
+![image](https://github.com/SpeedReach/deep_learning_hw1/blob/main/images/PAC_50.jpg?raw=true)
+
+As the dimension being reduced, we are effectively representing the data with fewer features. This could cause detail loss. The decoded images with lower dimensions will likely be more blurred or have less distinct features compared to those with higher dimensions. With extremely low dimensions (like 50), some digits might become difficult to distinguish, as there's less information available for reconstruction(decoding).
