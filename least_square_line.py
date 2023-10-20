@@ -1,46 +1,32 @@
-import scipy.io
-import matplotlib.pyplot as plt
 import numpy as np
-from scipy.optimize import curve_fit
+import scipy.io
 
-# load data
-mat_data = scipy.io.loadmat('data.mat')
-x = mat_data['x'].flatten()
-y = mat_data['y'].flatten()
+# Load the data from data.mat
+data = scipy.io.loadmat('data.mat')
 
-# plot data
-plt.plot(x, y)
-plt.xlabel('x')
-plt.ylabel('y')
+# Extract x and y from the loaded data
+x = data['x']
+y = data['y']
+
+X = np.column_stack((np.ones_like(x), x,x**2))
+
+theta = np.linalg.inv(X.T.dot(X)).dot(X.T).dot(y)
 
 
-n = len(x)
-def line(v, theta_0, theta_1):
-    return theta_0 + theta_1 * v
+print(theta)
 
-# Perform the curve fitting using least squares
-params, covariance = curve_fit(line, x, y)
+# Extract the coefficients from theta
+theta_0, theta_1, = theta
 
-# Extract the parameters
-theta_0, theta_1 = params
+# Define the fitted parabola function
+fitted_parabola = lambda x: theta_0 + theta_1*x
 
-# Print the parameters
-print(f'Theta_0: {theta_0}')
-print(f'Theta_1: {theta_1}')
+# Evaluate the fitted parabola on the x values
+y_fitted = fitted_parabola(x)
 
-# Calculate the predicted y values using the fitted parameters
-y_pred = line(x, *params)
+import matplotlib.pyplot as plt
 
-# Calculate the mean squared error
-mse = np.mean((y - y_pred)**2)
-
-# Print the mean squared error
-print(f'Mean Squared Error (MSE): {mse}') #0.20580596682517396
-
-# Generate the least squares line
-y_ls = theta_0 + x*theta_1
-plt.plot(x, y_ls, label=f'least square line: y = {theta_0:.2f} + {theta_1:.2f}x', color='red')
-
+plt.scatter(x, y, label='Data')
+plt.plot(x, y_fitted, label='Fitted Line', color='red')
 plt.legend()
 plt.show()
-
