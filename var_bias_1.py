@@ -52,6 +52,7 @@ for i in range(num_iterations):
 
 print(np.mean(mse))
 
+
 plt.xlabel('x')
 plt.ylabel('y')
 plt.title('Lines')

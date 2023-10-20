@@ -1,6 +1,7 @@
 import scipy.io
 import numpy as np
 import matplotlib.pyplot as plt
+import random
 
 # Load train data
 train_data = scipy.io.loadmat('train.mat')
@@ -9,8 +10,8 @@ Y_train = train_data['y'].ravel()  # corresponding labels
 
 lr = 0.01
 
-w0 = 0
-w1 = 0
+w0 = random.randint(-100,100)/100.0
+w1 = random.randint(-100,100)/100.0
 
 identify = lambda t: t > 0.5 and np.array(1) or np.array(0)
 
@@ -18,7 +19,7 @@ def cal_prob(x1, x2):
     return 1/(1 + np.exp(-(w0*x1 + w1*x2)))
 
 # Gradient Descent
-for i in range(1000):
+for i in range(100000):
     y_pred = cal_prob(X_train.T[0], X_train.T[1])
     y_pred = np.array([ identify(yi) for yi in y_pred])
     pd_0 = (1/len(X_train)) * np.sum((y_pred - Y_train) * X_train.T[0])

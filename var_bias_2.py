@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import scipy.io
 import numpy as np
 
+
 data = scipy.io.loadmat('data.mat')
 x = data['x'].flatten()
 y = data['y'].flatten()
@@ -54,6 +55,7 @@ for i in range(num_iterations):
     mse = np.append(mse,np.mean((predict_y - y)**2))
 
 print(np.mean(mse))
+
 
 plt.xlabel('x')
 plt.ylabel('y')
